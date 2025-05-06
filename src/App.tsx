@@ -25,28 +25,35 @@ function App() {
 
   const onToggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | undefined>(undefined);
   const [metadata, setMetadata] = useState<VideoMetadata | null>(null);
   const [platform, setPlatform] = useState<VideoMetadata['platform']>('unknown');
 
   const handleUrlSubmit = async (inputUrl: string) => {
-    setError(null);
-    
+    setError(undefined);
     if (!validateUrl(inputUrl)) {
       setError('Please enter a valid URL from YouTube, Twitter, or Instagram.');
       return;
     }
-    
     const detectedPlatform = detectPlatform(inputUrl);
     setPlatform(detectedPlatform);
-    
     setIsLoading(true);
-    
     try {
       const videoMetadata = await fetchMetadataFromApi(inputUrl);
       setMetadata(videoMetadata);
-    } catch (err) {
-      setError('Failed to fetch video information. Please try again.');
+    } catch (err: any) {
+      // Enhanced error handling for user-friendly messages
+      if (err && err.response && err.response.status) {
+        if (err.response.status === 429) {
+          setError('We are experiencing temporary rate-limiting from YouTube. Please try again later or use a proxy.');
+        } else if (err.response.status === 502) {
+          setError('There is a problem with the proxy connection. Please try again later.');
+        } else {
+          setError('Failed to fetch video information. Please try again later.');
+        }
+      } else {
+        setError('Failed to fetch video information. Please try again later.');
+      }
       setMetadata(null);
     } finally {
       setIsLoading(false);
@@ -79,6 +86,7 @@ function App() {
                 onSubmit={handleUrlSubmit} 
                 isLoading={isLoading}
                 platform={platform}
+                error={error}
               />
               
               {error && (

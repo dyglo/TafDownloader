@@ -42,11 +42,16 @@ async def get_metadata(data: dict):
     }
     if YTDLP_PROXY:
         ydl_opts["proxy"] = YTDLP_PROXY
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        try:
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=False)
-        except Exception as e:
-            raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        error_msg = str(e)
+        if "429" in error_msg or "Too Many Requests" in error_msg:
+            raise HTTPException(status_code=429, detail="We are experiencing temporary rate-limiting from YouTube. Please try again later or use a proxy.")
+        if "proxy" in error_msg.lower():
+            raise HTTPException(status_code=502, detail="There is a problem with the proxy connection. Please try again later.")
+        raise HTTPException(status_code=400, detail="Failed to fetch video information. Please try again later.")
     # Prepare qualities
     qualities = []
     for f in info.get("formats", []):
@@ -113,6 +118,11 @@ async def download_video(data: dict):
             "Content-Disposition": f'attachment; filename="video_{quality}.mp4"'
         })
     except Exception as e:
+        error_msg = str(e)
         if os.path.exists(filename):
             os.remove(filename)
-        raise HTTPException(status_code=500, detail=str(e))
+        if "429" in error_msg or "Too Many Requests" in error_msg:
+            raise HTTPException(status_code=429, detail="We are experiencing temporary rate-limiting from YouTube. Please try again later or use a proxy.")
+        if "proxy" in error_msg.lower():
+            raise HTTPException(status_code=502, detail="There is a problem with the proxy connection. Please try again later.")
+        raise HTTPException(status_code=500, detail="Failed to download the video. Please try again later.")
