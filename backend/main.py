@@ -34,7 +34,11 @@ async def get_metadata(data: dict):
     ydl_opts = {
         "quiet": True, 
         "skip_download": True,
-        "ffmpeg_location": r"C:\ProgramData\chocolatey\bin\ffmpeg.exe"
+        "ffmpeg_location": r"C:\ProgramData\chocolatey\bin\ffmpeg.exe",
+        "http_headers": {"User-Agent": "Mozilla/5.0"},
+        "impersonate": "chrome",
+        "sleep_interval": 2,  # seconds to sleep before each download
+        "max_sleep_interval": 5  # random sleep up to 5 seconds
     }
     if YTDLP_PROXY:
         ydl_opts["proxy"] = YTDLP_PROXY
@@ -90,7 +94,11 @@ async def download_video(data: dict):
         "outtmpl": filename,
         "quiet": True,
         "merge_output_format": "mp4",
-        "ffmpeg_location": r"C:\ProgramData\chocolatey\bin\ffmpeg.exe"
+        "ffmpeg_location": r"C:\ProgramData\chocolatey\bin\ffmpeg.exe",
+        "http_headers": {"User-Agent": "Mozilla/5.0"},
+        "impersonate": "chrome",
+        "sleep_interval": 2,
+        "max_sleep_interval": 5
     }
     if YTDLP_PROXY:
         ydl_opts["proxy"] = YTDLP_PROXY
