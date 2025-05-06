@@ -48,7 +48,7 @@ const Header: React.FC<HeaderProps> = ({ theme, onToggleTheme }) => {
       </div>
       {/* Mobile Nav Drawer */}
       {mobileNavOpen && (
-        <nav className={`md:hidden absolute left-0 right-0 top-full bg-white dark:bg-black shadow-lg border-t border-gray-200 dark:border-neutral-800 transition-all duration-300 z-20`}>
+        <nav className="md:hidden absolute left-0 right-0 top-full bg-white dark:bg-black shadow-lg border-t border-gray-200 dark:border-neutral-800 transition-all duration-300 z-20">
           <ul className="flex flex-col py-4 px-6 gap-4">
             <li>
               <a href="#" className="block py-2 text-lg font-medium text-gray-900 dark:text-white hover:text-blue-500" onClick={() => setMobileNavOpen(false)}>
