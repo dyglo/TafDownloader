@@ -1,0 +1,49 @@
+/* Dark mode gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #4F46E5 0%, #818CF8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dark .text-gray-600 {
+  color: #475569;
+}
+
+.dark .text-gray-300 {
+  color: #e2e8f0;
+}
+
+.dark .text-gray-400 {
+  color: #94a3b8;
+}
+
+.dark .text-gray-200 {
+  color: #f1f5f9;
+}
+
+/* Dark mode hover effects */
+.glow-card {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+.glow-card:hover {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+/* Dark mode pulse effect */
+.pulse-hover {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
